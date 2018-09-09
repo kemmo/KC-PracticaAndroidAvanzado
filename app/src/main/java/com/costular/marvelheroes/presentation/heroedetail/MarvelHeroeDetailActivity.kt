@@ -43,7 +43,10 @@ class MarvelHeroeDetailActivity : AppCompatActivity() {
         supportPostponeEnterTransition() // Wait for image load and then draw the animation
         setUpViewModel()
         val hero: MarvelHeroEntity? = intent?.extras?.getParcelable(PARAM_HEROE)
-        hero?.let { fillHeroData(it) }
+        hero?.let {
+            fillHeroData(it)
+            setFavouriteButtonAction(it)
+        }
     }
 
     private fun inject() {
@@ -84,6 +87,26 @@ class MarvelHeroeDetailActivity : AppCompatActivity() {
         heroDetailHeight.text = hero.height
         heroDetailPower.text = hero.power
         heroDetailAbilities.text = hero.abilities
+        setFavoriteIcon(hero.favourite)
+    }
+
+    private fun setFavoriteIcon(isFavourite: Boolean){
+        favouriteButton.setImageResource(
+                when(isFavourite ){
+                    true -> android.R.drawable.btn_star_big_on
+                    false -> android.R.drawable.btn_star_big_off}
+        )
+    }
+
+    private fun setFavouriteButtonAction(hero: MarvelHeroEntity) {
+        favouriteButton.setOnClickListener {
+            var marvelHeroUpdated: MarvelHeroEntity
+            hero?.let {
+
+                marvelHeroUpdated = hero!!.copy(favourite = !hero!!.favourite)
+                marvelHeroDetailViewModel.setMarvelHeroFavourite(marvelHeroUpdated)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

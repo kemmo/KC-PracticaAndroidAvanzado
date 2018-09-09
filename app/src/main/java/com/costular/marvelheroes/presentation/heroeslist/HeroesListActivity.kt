@@ -34,6 +34,11 @@ class HeroesListActivity : AppCompatActivity() {
         setUp()
     }
 
+    override fun onResume() {
+        super.onResume()
+        heroesListViewModel.loadMarvelHeroes()
+    }
+
     fun inject() {
         (application as MainApp).component.inject(this)
     }
@@ -53,7 +58,6 @@ class HeroesListActivity : AppCompatActivity() {
     private fun setUpViewModel() {
         heroesListViewModel = ViewModelProviders.of(this, viewModelFactory).get(HeroesListViewModel::class.java)
         bindEvents()
-        heroesListViewModel.loadMarvelHeroes()
     }
 
     private fun bindEvents(){

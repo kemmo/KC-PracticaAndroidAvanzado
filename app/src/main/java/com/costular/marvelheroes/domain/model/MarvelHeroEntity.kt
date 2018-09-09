@@ -13,13 +13,13 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "marvelHeroes")
 @Parcelize
 data class MarvelHeroEntity(
-        @PrimaryKey(autoGenerate = true)
-        val id: Long,
+        @PrimaryKey
         val name: String,
         val photoUrl: String,
         val realName: String,
         val height: String,
         val power: String,
         val abilities: String,
-        val groups: Array<String>
+        val groups: Array<String>,
+        var favourite: Boolean
 ) : Parcelable

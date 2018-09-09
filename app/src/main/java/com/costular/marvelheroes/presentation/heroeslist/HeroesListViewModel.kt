@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.costular.marvelheroes.data.repository.MarvelHeroesRepository
 import com.costular.marvelheroes.domain.model.MarvelHeroEntity
+import com.costular.marvelheroes.presentation.util.SettingsManager
 import com.costular.marvelheroes.presentation.util.mvvm.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
@@ -12,7 +13,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class HeroesListViewModel @Inject constructor(
-        val marvelHeroesRepository: MarvelHeroesRepository)
+        val marvelHeroesRepository: MarvelHeroesRepository,
+        val settingsManager: SettingsManager)
     : BaseViewModel() {
 
     val marvelListState: MutableLiveData<List<MarvelHeroEntity>> = MutableLiveData()
@@ -32,6 +34,7 @@ class HeroesListViewModel @Inject constructor(
                             Log.d("MarvelListViewModel", it.toString())
                         },
                         onComplete = {
+                            settingsManager.firstLoad = false
                         }
                 )
                 .addTo(compositeDisposable)

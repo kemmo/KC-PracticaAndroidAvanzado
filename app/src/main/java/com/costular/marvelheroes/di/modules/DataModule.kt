@@ -2,6 +2,8 @@ package com.costular.marvelheroes.di.modules
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import com.costular.marvelheroes.data.database.MarvelHeroesDatabase
 import com.costular.marvelheroes.data.model.mapper.MarvelHeroMapper
 import com.costular.marvelheroes.data.net.MarvelHeroesService
@@ -9,6 +11,7 @@ import com.costular.marvelheroes.data.repository.MarvelHeroesRepository
 import com.costular.marvelheroes.data.repository.MarvelHeroesRepositoryImpl
 import com.costular.marvelheroes.data.repository.datasource.LocalMarvelHeroesDataSource
 import com.costular.marvelheroes.data.repository.datasource.RemoteMarvelHeroesDataSource
+import com.costular.marvelheroes.presentation.util.SettingsManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -22,6 +25,16 @@ class DataModule {
     @Provides
     @Singleton
     fun provideMarvelHeroMapper(): MarvelHeroMapper = MarvelHeroMapper()
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(context: Context): SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(context)
+
+    @Singleton
+    @Provides
+    fun provideSettingsManager(sharedPreferences: SharedPreferences): SettingsManager =
+            SettingsManager(sharedPreferences)
 
     @Provides
     @Singleton
@@ -42,7 +55,8 @@ class DataModule {
     @Singleton
     fun provideMarvelHeroesRepository(
             marvelRemoteMarvelHeroesDataSource: RemoteMarvelHeroesDataSource,
-            marvelLocalMarvelHeroesDataSource: LocalMarvelHeroesDataSource): MarvelHeroesRepository =
-            MarvelHeroesRepositoryImpl(marvelRemoteMarvelHeroesDataSource, marvelLocalMarvelHeroesDataSource)
+            marvelLocalMarvelHeroesDataSource: LocalMarvelHeroesDataSource,
+            settingsManager: SettingsManager): MarvelHeroesRepository =
+            MarvelHeroesRepositoryImpl(marvelRemoteMarvelHeroesDataSource, marvelLocalMarvelHeroesDataSource, settingsManager)
 
 }
