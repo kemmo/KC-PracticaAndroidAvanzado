@@ -1,8 +1,12 @@
 package com.costular.marvelheroes.di.modules
 
+import android.arch.persistence.room.Room
+import android.content.Context
+import com.costular.marvelheroes.data.database.MarvelHeroesDatabase
 import com.costular.marvelheroes.data.model.mapper.MarvelHeroMapper
 import com.costular.marvelheroes.data.net.MarvelHeroesService
 import com.costular.marvelheroes.data.repository.MarvelHeroesRepositoryImpl
+import com.costular.marvelheroes.data.repository.datasource.LocalMarvelHeroesDataSource
 import com.costular.marvelheroes.data.repository.datasource.RemoteMarvelHeroesDataSource
 import dagger.Module
 import dagger.Provides
@@ -20,15 +24,25 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideRemoteMarvelHeroesDataSoruce(marvelHeroesService: MarvelHeroesService)
+    fun provideDatabase(context: Context): MarvelHeroesDatabase =
+            Room.databaseBuilder(context,  MarvelHeroesDatabase::class.java, "marvelhero.db").build()
+
+    @Provides
+    @Singleton
+    fun provideLocalMarvelHeroesDataSource(marvelHeroesDatabase: MarvelHeroesDatabase): LocalMarvelHeroesDataSource = LocalMarvelHeroesDataSource()
+
+    @Provides
+    @Singleton
+    fun provideRemoteMarvelHeroesDataSoruce(marvelHeroesService: MarvelHeroesService, marvelHeroMapper: MarvelHeroMapper)
             : RemoteMarvelHeroesDataSource =
-            RemoteMarvelHeroesDataSource(marvelHeroesService)
+            RemoteMarvelHeroesDataSource(marvelHeroesService, marvelHeroMapper)
 
     @Provides
     @Singleton
     fun provideMarvelHeroesRepository(
             marvelRemoteMarvelHeroesDataSource: RemoteMarvelHeroesDataSource,
+            marvelLocalMarvelHeroesDataSource: LocalMarvelHeroesDataSource,
             marvelHeroMapper: MarvelHeroMapper): MarvelHeroesRepositoryImpl =
-            MarvelHeroesRepositoryImpl(marvelRemoteMarvelHeroesDataSource, marvelHeroMapper)
+            MarvelHeroesRepositoryImpl(marvelRemoteMarvelHeroesDataSource, marvelLocalMarvelHeroesDataSource, marvelHeroMapper)
 
 }
