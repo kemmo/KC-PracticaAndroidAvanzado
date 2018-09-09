@@ -5,6 +5,7 @@ import android.content.Context
 import com.costular.marvelheroes.data.database.MarvelHeroesDatabase
 import com.costular.marvelheroes.data.model.mapper.MarvelHeroMapper
 import com.costular.marvelheroes.data.net.MarvelHeroesService
+import com.costular.marvelheroes.data.repository.MarvelHeroesRepository
 import com.costular.marvelheroes.data.repository.MarvelHeroesRepositoryImpl
 import com.costular.marvelheroes.data.repository.datasource.LocalMarvelHeroesDataSource
 import com.costular.marvelheroes.data.repository.datasource.RemoteMarvelHeroesDataSource
@@ -41,7 +42,7 @@ class DataModule {
     @Singleton
     fun provideMarvelHeroesRepository(
             marvelRemoteMarvelHeroesDataSource: RemoteMarvelHeroesDataSource,
-            marvelLocalMarvelHeroesDataSource: LocalMarvelHeroesDataSource): MarvelHeroesRepositoryImpl =
+            marvelLocalMarvelHeroesDataSource: LocalMarvelHeroesDataSource): MarvelHeroesRepository =
             MarvelHeroesRepositoryImpl(marvelRemoteMarvelHeroesDataSource, marvelLocalMarvelHeroesDataSource)
 
 }

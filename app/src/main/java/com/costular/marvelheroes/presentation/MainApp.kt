@@ -10,10 +10,15 @@ import com.costular.marvelheroes.di.modules.ApplicationModule
  */
 class MainApp : Application() {
 
-    val component: ApplicationComponent by lazy {
-        DaggerApplicationComponent.builder()
-                .applicationModule(ApplicationModule(this))
-                .build()
-    }
+    lateinit var component: ApplicationComponent
 
+    override fun onCreate() {
+        super.onCreate()
+
+        component =
+                DaggerApplicationComponent.builder()
+                        .applicationModule(ApplicationModule(this))
+                        .build()
+
+    }
 }
