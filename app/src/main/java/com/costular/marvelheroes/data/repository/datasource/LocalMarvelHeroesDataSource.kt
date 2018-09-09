@@ -16,4 +16,13 @@ class LocalMarvelHeroesDataSource(val marvelHeroDatabase: MarvelHeroesDatabase) 
         }.subscribeOn(Schedulers.io())
                 .subscribe()
     }
+
+    fun setMarvelHeroFavourite(marvelHero: MarvelHeroEntity) {
+        Observable.fromCallable {
+            marvelHeroDatabase
+                    .getMarvelHeroesDao()
+                    .updateMarvelHero(marvelHero)
+        }.subscribeOn(Schedulers.io())
+                .subscribe()
+    }
 }

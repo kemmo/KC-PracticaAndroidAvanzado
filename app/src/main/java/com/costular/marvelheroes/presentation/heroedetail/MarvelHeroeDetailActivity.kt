@@ -1,9 +1,11 @@
 package com.costular.marvelheroes.presentation.heroedetail
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -12,7 +14,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.costular.marvelheroes.R
 import com.costular.marvelheroes.domain.model.MarvelHeroEntity
+import com.costular.marvelheroes.presentation.MainApp
 import kotlinx.android.synthetic.main.activity_hero_detail.*
+import javax.inject.Inject
 
 /**
  * Created by costular on 18/03/2018.
@@ -23,7 +27,13 @@ class MarvelHeroeDetailActivity : AppCompatActivity() {
         const val PARAM_HEROE = "heroe"
     }
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    lateinit var marvelHeroDetailViewModel: MarvelHeroDetailViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        inject()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hero_detail)
         supportActionBar?.apply {
@@ -31,9 +41,26 @@ class MarvelHeroeDetailActivity : AppCompatActivity() {
             setHomeButtonEnabled(true)
         }
         supportPostponeEnterTransition() // Wait for image load and then draw the animation
-
+        setUpViewModel()
         val hero: MarvelHeroEntity? = intent?.extras?.getParcelable(PARAM_HEROE)
         hero?.let { fillHeroData(it) }
+    }
+
+    private fun inject() {
+        (application as MainApp).component.inject(this)
+    }
+
+    private fun setUpViewModel() {
+        marvelHeroDetailViewModel = ViewModelProviders.of(this, viewModelFactory).get(MarvelHeroDetailViewModel::class.java)
+        bindEvents()
+    }
+
+    private fun bindEvents(){
+        marvelHeroDetailViewModel.marvelHeroDetailState.observe(this, Observer { heroDetail ->
+            heroDetail?.let {
+                fillHeroData(heroDetail)
+            }
+        })
     }
 
     private fun fillHeroData(hero: MarvelHeroEntity) {

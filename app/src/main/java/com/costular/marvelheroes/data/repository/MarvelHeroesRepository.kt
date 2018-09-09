@@ -10,4 +10,6 @@ interface MarvelHeroesRepository {
 
     fun getMarvelHeroesList(): Flowable<List<MarvelHeroEntity>>
 
+    fun setMarvelHeroFavourite(marvelHeroEntity: MarvelHeroEntity): Flowable<MarvelHeroEntity>
+
 }

@@ -24,4 +24,10 @@ class MarvelHeroesRepositoryImpl(private val remoteMarvelHeroesDataSource: Remot
                 localMarvelHeroesDataSource.saveMarvelHeroes(it)
             }
 
+    override fun setMarvelHeroFavourite(marvelHeroEntity: MarvelHeroEntity): Flowable<MarvelHeroEntity> =
+            Flowable.just(marvelHeroEntity)
+                    .doOnNext {
+                        localMarvelHeroesDataSource.setMarvelHeroFavourite(it)
+                    }
+
 }
