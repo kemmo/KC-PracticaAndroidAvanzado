@@ -10,19 +10,18 @@ import io.reactivex.Flowable
  * Created by costular on 17/03/2018.
  */
 class MarvelHeroesRepositoryImpl(private val remoteMarvelHeroesDataSource: RemoteMarvelHeroesDataSource,
-                                 private val localMarvelHeroesDataSource: LocalMarvelHeroesDataSource,
-                                 private val marvelHeroesMapper: MarvelHeroMapper)
+                                 private val localMarvelHeroesDataSource: LocalMarvelHeroesDataSource)
     : MarvelHeroesRepository {
 
     override fun getMarvelHeroesList(): Flowable<List<MarvelHeroEntity>> =
             getMarvelHeroesFromRemoteService()
-                    //TODO: .concatWith(getMarvelHeroesFromLocalDatabase() )
+                    .concatWith(getMarvelHeroesFromLocalDatabase())
 
     private fun getMarvelHeroesFromLocalDatabase(): Flowable<List<MarvelHeroEntity>> = localMarvelHeroesDataSource.getMarvelHeroesList()
 
     private fun getMarvelHeroesFromRemoteService(): Flowable<List<MarvelHeroEntity>> =
             remoteMarvelHeroesDataSource.getMarvelHeroesList().doOnNext {
-                //TODO: Save marvel hero list in local database
+                localMarvelHeroesDataSource.saveMarvelHeroes(it)
             }
 
 }

@@ -29,7 +29,7 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideLocalMarvelHeroesDataSource(marvelHeroesDatabase: MarvelHeroesDatabase): LocalMarvelHeroesDataSource = LocalMarvelHeroesDataSource()
+    fun provideLocalMarvelHeroesDataSource(marvelHeroesDatabase: MarvelHeroesDatabase): LocalMarvelHeroesDataSource = LocalMarvelHeroesDataSource(marvelHeroesDatabase)
 
     @Provides
     @Singleton
@@ -41,8 +41,7 @@ class DataModule {
     @Singleton
     fun provideMarvelHeroesRepository(
             marvelRemoteMarvelHeroesDataSource: RemoteMarvelHeroesDataSource,
-            marvelLocalMarvelHeroesDataSource: LocalMarvelHeroesDataSource,
-            marvelHeroMapper: MarvelHeroMapper): MarvelHeroesRepositoryImpl =
-            MarvelHeroesRepositoryImpl(marvelRemoteMarvelHeroesDataSource, marvelLocalMarvelHeroesDataSource, marvelHeroMapper)
+            marvelLocalMarvelHeroesDataSource: LocalMarvelHeroesDataSource): MarvelHeroesRepositoryImpl =
+            MarvelHeroesRepositoryImpl(marvelRemoteMarvelHeroesDataSource, marvelLocalMarvelHeroesDataSource)
 
 }
